@@ -1,0 +1,26 @@
+﻿@page "/"
+@using Genetics.Shared;
+@inject HttpClient Http
+
+<PageTitle>Index</PageTitle>
+
+<h1>Hello, world!</h1>
+
+Welcome to your new app.
+
+<SurveyPrompt Title="How is Blazor working for you?" />
+
+@code {
+    private List<WeatherForecast> _films = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        //Http.BaseAddress = new Uri("https://localhost:7086");
+
+        var response = await Http.GetFromJsonAsync<List<WeatherForecast>>("/api/WeatherForecast");
+        if (response != null)
+        {
+            _films = response;
+        }
+    }
+}
