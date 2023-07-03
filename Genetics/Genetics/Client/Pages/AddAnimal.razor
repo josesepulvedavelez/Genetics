@@ -1,0 +1,141 @@
+﻿﻿
+@page "/AddAnimal"
+
+@using Genetics.Shared.Models;
+@using Genetics.Shared;
+@using Newtonsoft
+@using Newtonsoft.Json
+@using System.Text
+@*@inject Services.ClienteService clienteService*@
+@inject HttpClient Http
+@inject DialogService DialogService
+@inject NotificationService NotificationService
+
+<RadzenNotification />
+
+@if (_Animal == null)
+{
+    <div class="spinner-grow" style="width: 3rem; height: 3rem;" role="status">
+        <span class="visually-hidden">Loading...</span>
+    </div>
+}
+else
+{
+    <EditForm Model="@_Animal" OnValidSubmit="@Save">
+        <DataAnnotationsValidator />
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label>Name</label>
+                    <RadzenTextBox @bind-Value="@_Animal.Name" class="w-100" />
+                    <ValidationMessage For="@(() => _Animal.Name)" />
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label>Breed</label>
+                    <RadzenTextBox @bind-Value="@_Animal.Breed" class="w-100" />
+                    <ValidationMessage For="@(() => _Animal.Breed)" />
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label>BirthDate</label>
+                    <RadzenDatePicker @bind-Value="@_Animal.BirthDate" class="w-100" />
+                    <ValidationMessage For="@(() => _Animal.BirthDate)" />
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label>Sex</label>
+                    <RadzenDropDown TValue="string" Data="@_lstSex" TextProperty="Sex" ValueProperty="Sex" @bind-Value="_Animal.Sex" class="w-100" />
+                    <ValidationMessage For="@(() => _Animal.Sex)" />
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label>Price</label>
+                    <RadzenTextBox Value="@_Animal.Price.ToString()" Change="@((string value) => _Animal.Price = decimal.Parse(value))" class="w-100" />
+                    <ValidationMessage For="@(() => _Animal.Price)" />
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label>Status</label>
+                    <RadzenCheckBox @bind-Value="@_Animal.Status" Text="Active" />
+                </div>
+            </div>
+        </div>
+
+        <br />
+
+        <div class="col-md-12">
+            <center>
+                <button type="submit" class="btn btn-success">Save</button>
+            </center>
+        </div>        
+    </EditForm>
+}
+
+@code {
+    private Animal _Animal = new();
+    private IEnumerable<Animal> _lstAnimals = new List<Animal>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        var response = await Http.GetFromJsonAsync<IEnumerable<Animal>>("/Api/Animals/GetAnimal");
+        if (response != null)
+        {
+            _lstAnimals = response;
+        }
+
+        LoadSex();
+    }
+
+    private async Task Save()
+    {
+        var json = JsonConvert.SerializeObject(_Animal);
+        var stringContent = new StringContent(json, UnicodeEncoding.UTF8, "application/json");
+        var httpResponse = await Http.PostAsync("/Api/Animals/AddAnimal", stringContent);
+
+        if (httpResponse.IsSuccessStatusCode)
+        {
+            ShowNotification(new NotificationMessage
+                {
+                    Severity = NotificationSeverity.Success,
+                    Summary = "Save Animal",
+                    Detail = "Animal saved successfully.",
+                    Duration = 6000
+                });
+            DialogService.Close(true);
+        }
+        else
+        {
+            ShowNotification(new NotificationMessage
+                {
+                    Severity = NotificationSeverity.Warning,
+                    Summary = "Save Animal",
+                    Detail = "The animal could not be saved.",
+                    Duration = 6000
+                });
+        }
+    }
+
+    void ShowNotification(NotificationMessage message)
+    {
+        NotificationService.Notify(message);
+    }
+
+    List<Sexx> _lstSex = new();
+
+    public void LoadSex()
+    {
+        _lstSex.Add(new Sexx { Sex = "Male", Id =1 });
+        _lstSex.Add(new Sexx { Sex = "Female", Id =2 });
+    }
+}

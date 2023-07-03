@@ -16,18 +16,23 @@ namespace Genetics.Shared.Models
         public int AnimalId { get; set; }
 
         [StringLength(50)]
+        [Required]
         public string Name { get; set; }
 
+        [Required]
         [StringLength(50)]
         public string Breed { get; set; }
 
+        [Required]
         public DateTime BirthDate { get; set; }
 
+        [Required]
         [StringLength(6)]
         public string Sex { get; set; }
 
+        [Required]
         public decimal Price { get; set; }
 
-        public Boolean Status { get; set; }
+        public Boolean? Status { get; set; }
     }
 }

@@ -10,7 +10,7 @@ using Genetics.Shared.Models;
 
 namespace Genetics.Server.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("Api/[controller]")]
     [ApiController]
     public class AnimalsController : ControllerBase
     {

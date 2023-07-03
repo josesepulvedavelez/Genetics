@@ -2,21 +2,24 @@
 @using Genetics.Shared;
 @using Genetics.Shared.Models;
 @inject HttpClient Http
+@inject DialogService DialogService
 
-<PageTitle>Animals</PageTitle>
+<RadzenDialog />
 
 <h1>Animals</h1>
 
+<button type="button" @onclick="(()=> AddAnimal())" class="btn btn-success">New Animal</button>
+
 <RadzenDataGrid AllowFiltering="true" AllowColumnResize="true" PageSize="10" AllowPaging="true" FilterMode="FilterMode.Advanced" AllowSorting="true"
-                Data="@lstAnimals" TItem="Animal" ColumnWidth="150px"
-                LogicalFilterOperator="LogicalFilterOperator.Or" EmptyText="No se encontraron registros.">
+            Data="@lstAnimals" TItem="Animal" ColumnWidth="150px"
+                LogicalFilterOperator="LogicalFilterOperator.Or" EmptyText="No records found.">
     <Columns>
         <RadzenDataGridColumn TItem="Animal" Property="Name" Title="Name" />
         <RadzenDataGridColumn TItem="Animal" Property="Breed" Title="Breed" />
-        <RadzenDataGridColumn TItem="Animal" Property="Breed" Title="BirthDate" />
-        <RadzenDataGridColumn TItem="Animal" Property="Breed" Title="Sex" />
-        <RadzenDataGridColumn TItem="Animal" Property="Breed" Title="Price" />
-        <RadzenDataGridColumn TItem="Animal" Property="Breed" Title="Status" />
+        <RadzenDataGridColumn TItem="Animal" Property="BirthDate" Title="BirthDate" />
+        <RadzenDataGridColumn TItem="Animal" Property="Sex" Title="Sex" />
+        <RadzenDataGridColumn TItem="Animal" Property="Price" Title="Price" />
+        <RadzenDataGridColumn TItem="Animal" Property="Status" Title="Status" />
     </Columns>
 </RadzenDataGrid>
 
@@ -25,10 +28,30 @@
 
     protected override async Task OnInitializedAsync()
     {
+        DialogService.OnClose += Close;
+        await GetAnimal();
+    }
+
+    public async Task GetAnimal()
+    {
         var response = await Http.GetFromJsonAsync<IEnumerable<Animal>>("/api/Animals/GetAnimal");
         if (response != null)
         {
             lstAnimals = response;
         }
+
+        StateHasChanged();
+    }
+
+    void Close(dynamic result)
+    {
+        Task.Run(() => GetAnimal());
+    }
+
+    private async Task AddAnimal()
+    {
+        await DialogService.OpenAsync<AddAnimal>($"Add Animal",
+            new Dictionary<string, object>() { },
+            new DialogOptions() { Width = "700px", Height = "570px", Resizable = true });
     }
 }
