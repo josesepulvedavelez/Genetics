@@ -18,7 +18,16 @@
         <RadzenDataGridColumn TItem="Animal" Property="Breed" Title="Breed" />
         <RadzenDataGridColumn TItem="Animal" Property="BirthDate" Title="BirthDate" />
         <RadzenDataGridColumn TItem="Animal" Property="Sex" Title="Sex" />
-        <RadzenDataGridColumn TItem="Animal" Property="Price" Title="Price" />
+
+		<RadzenDataGridColumn TItem="Animal" Property="Price" Title="Price">
+			<Template Context="data">
+				@String.Format(new System.Globalization.CultureInfo("en-US"), "{0:C}", data.Price)
+			</Template>
+			<FooterTemplate>
+				Total Price: <b>@String.Format(new System.Globalization.CultureInfo("en-US"), "{0:C}", GetTotalPrice())</b>
+			</FooterTemplate>
+		</RadzenDataGridColumn>
+
         <RadzenDataGridColumn TItem="Animal" Property="Status" Title="Status" />
 
         <RadzenDataGridColumn TItem="Animal" Property="AnimalId" Title="Actions">
@@ -28,7 +37,10 @@
                 </button>
             </Template>
         </RadzenDataGridColumn>
+
+        
     </Columns>
+    
 </RadzenDataGrid>
 
 @code {
@@ -68,5 +80,10 @@
         await DialogService.OpenAsync<UpdateAnimal>($"Update Animal",
             new Dictionary<string, object>() { { "Id", id } },
             new DialogOptions() { Width = "700px", Height = "570px", Resizable = true });
+    }
+
+    private decimal GetTotalPrice()
+    {
+        return lstAnimals.Sum(a => a.Price);
     }
 }
