@@ -31,7 +31,7 @@ namespace Genetics.Server.Controllers
             return await _context.Animal.ToListAsync();
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("GetAnimal/{id}")]
         public async Task<ActionResult<Animal>> GetAnimal(int id)
         {
           if (_context.Animal == null)
@@ -48,7 +48,7 @@ namespace Genetics.Server.Controllers
             return animal;
         }
 
-        [HttpPut("{id}")]
+        [HttpPut("UpdateAnimal/{id}")]
         public async Task<IActionResult> UpdateAnimal(int id, Animal animal)
         {
             if (id != animal.AnimalId)

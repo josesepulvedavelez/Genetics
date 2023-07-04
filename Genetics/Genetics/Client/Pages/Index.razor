@@ -20,6 +20,14 @@
         <RadzenDataGridColumn TItem="Animal" Property="Sex" Title="Sex" />
         <RadzenDataGridColumn TItem="Animal" Property="Price" Title="Price" />
         <RadzenDataGridColumn TItem="Animal" Property="Status" Title="Status" />
+
+        <RadzenDataGridColumn TItem="Animal" Property="AnimalId" Title="Actions">
+            <Template Context="data">
+                <button type="button" @onclick="(()=>UpdateAnimal(data.AnimalId))" class="btn btn-info">
+                    <span class="oi oi-pencil" aria-hidden="true"></span>
+                </button>
+            </Template>
+        </RadzenDataGridColumn>
     </Columns>
 </RadzenDataGrid>
 
@@ -52,6 +60,13 @@
     {
         await DialogService.OpenAsync<AddAnimal>($"Add Animal",
             new Dictionary<string, object>() { },
+            new DialogOptions() { Width = "700px", Height = "570px", Resizable = true });
+    }
+
+    private async Task UpdateAnimal(int id)
+    {
+        await DialogService.OpenAsync<UpdateAnimal>($"Update Animal",
+            new Dictionary<string, object>() { { "Id", id } },
             new DialogOptions() { Width = "700px", Height = "570px", Resizable = true });
     }
 }
