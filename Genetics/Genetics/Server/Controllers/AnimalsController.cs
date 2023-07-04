@@ -24,11 +24,13 @@ namespace Genetics.Server.Controllers
         [HttpGet("GetAnimal")]
         public async Task<ActionResult<IEnumerable<Animal>>> GetAnimal()
         {
-          if (_context.Animal == null)
-          {
-              return NotFound();
-          }
-            return await _context.Animal.ToListAsync();
+            if (_context.Animal == null)
+            {
+                return NotFound();
+            }
+
+            var animals = await _context.Animal.OrderBy(a => a.Breed).ToListAsync();
+            return animals;
         }
 
         [HttpGet("GetAnimal/{id}")]
