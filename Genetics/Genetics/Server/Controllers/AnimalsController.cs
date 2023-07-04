@@ -90,6 +90,46 @@ namespace Genetics.Server.Controllers
             return CreatedAtAction("GetAnimal", new { id = animal.AnimalId }, animal);
         }
 
+        [HttpPost]
+        [Route("AddAnimalMasive")]
+        public async Task<IActionResult> AddAnimalMasive([FromBody]List<Animal> lstAnimal)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            try
+            {
+                var animals = new List<Animal>();
+
+                foreach (var item in lstAnimal)
+                {
+                    var animal = new Animal
+                    {
+                        Name = item.Name,
+                        Breed = item.Breed,
+                        BirthDate = item.BirthDate,
+                        Sex = item.Sex,
+                        Price = item.Price,
+                        Status = item.Status
+                    };
+
+                    animals.Add(animal);
+                }
+
+                _context.Animal.AddRange(animals);
+                await _context.SaveChangesAsync();
+
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
+        }
+
+
         [HttpDelete("DeleteAnimal/{id}")]
         public async Task<IActionResult> DeleteAnimal(int id)
         {

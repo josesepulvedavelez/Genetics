@@ -1,0 +1,263 @@
+[
+    {
+        "animalId": 8,
+        "name": "Max",
+        "breed": "Labrador Retriever",
+        "birthDate": "2019-05-15T00:00:00",
+        "sex": "Male",
+        "price": 500.0,
+        "status": true
+    },
+    {
+        "animalId": 9,
+        "name": "Luna",
+        "breed": "German Shepherd",
+        "birthDate": "2020-02-10T00:00:00",
+        "sex": "Female",
+        "price": 600.0,
+        "status": true
+    },
+    {
+        "animalId": 10,
+        "name": "Rocky",
+        "breed": "Boxer",
+        "birthDate": "2018-11-20T00:00:00",
+        "sex": "Male",
+        "price": 450.0,
+        "status": true
+    },
+    {
+        "animalId": 11,
+        "name": "Bella",
+        "breed": "Golden Retriever",
+        "birthDate": "2021-03-05T00:00:00",
+        "sex": "Female",
+        "price": 550.0,
+        "status": true
+    },
+    {
+        "animalId": 12,
+        "name": "Charlie",
+        "breed": "French Bulldog",
+        "birthDate": "2020-07-12T00:00:00",
+        "sex": "Male",
+        "price": 700.0,
+        "status": true
+    },
+    {
+        "animalId": 13,
+        "name": "Lucy",
+        "breed": "Poodle",
+        "birthDate": "2019-09-25T00:00:00",
+        "sex": "Female",
+        "price": 400.0,
+        "status": true
+    },
+    {
+        "animalId": 14,
+        "name": "Cooper",
+        "breed": "Siberian Husky",
+        "birthDate": "2020-04-08T00:00:00",
+        "sex": "Male",
+        "price": 550.0,
+        "status": true
+    },
+    {
+        "animalId": 15,
+        "name": "Daisy",
+        "breed": "Beagle",
+        "birthDate": "2018-12-30T00:00:00",
+        "sex": "Female",
+        "price": 350.0,
+        "status": true
+    },
+    {
+        "animalId": 16,
+        "name": "Maximus",
+        "breed": "Doberman Pinscher",
+        "birthDate": "2019-08-18T00:00:00",
+        "sex": "Male",
+        "price": 600.0,
+        "status": true
+    },
+    {
+        "animalId": 17,
+        "name": "Sadie",
+        "breed": "Cocker Spaniel",
+        "birthDate": "2021-01-07T00:00:00",
+        "sex": "Female",
+        "price": 450.0,
+        "status": true
+    },
+    {
+        "animalId": 18,
+        "name": "Bailey",
+        "breed": "Rottweiler",
+        "birthDate": "2020-06-23T00:00:00",
+        "sex": "Male",
+        "price": 550.0,
+        "status": true
+    },
+    {
+        "animalId": 19,
+        "name": "Lola",
+        "breed": "Bulldog",
+        "birthDate": "2019-03-14T00:00:00",
+        "sex": "Female",
+        "price": 500.0,
+        "status": true
+    },
+    {
+        "animalId": 20,
+        "name": "Leo",
+        "breed": "Great Dane",
+        "birthDate": "2018-10-11T00:00:00",
+        "sex": "Male",
+        "price": 650.0,
+        "status": true
+    },
+    {
+        "animalId": 21,
+        "name": "Molly",
+        "breed": "Shih Tzu",
+        "birthDate": "2021-02-28T00:00:00",
+        "sex": "Female",
+        "price": 400.0,
+        "status": true
+    },
+    {
+        "animalId": 22,
+        "name": "Rocky",
+        "breed": "Pomeranian",
+        "birthDate": "2020-05-19T00:00:00",
+        "sex": "Male",
+        "price": 550.0,
+        "status": true
+    },
+    {
+        "animalId": 23,
+        "name": "Coco",
+        "breed": "Chihuahua",
+        "birthDate": "2019-07-07T00:00:00",
+        "sex": "Female",
+        "price": 300.0,
+        "status": true
+    },
+    {
+        "animalId": 24,
+        "name": "Oscar",
+        "breed": "Basset Hound",
+        "birthDate": "2020-01-25T00:00:00",
+        "sex": "Male",
+        "price": 450.0,
+        "status": true
+    },
+    {
+        "animalId": 25,
+        "name": "Lily",
+        "breed": "Dachshund",
+        "birthDate": "2018-09-14T00:00:00",
+        "sex": "Female",
+        "price": 350.0,
+        "status": true
+    },
+    {
+        "animalId": 26,
+        "name": "Bear",
+        "breed": "Saint Bernard",
+        "birthDate": "2019-12-01T00:00:00",
+        "sex": "Male",
+        "price": 600.0,
+        "status": true
+    },
+    {
+        "animalId": 27,
+        "name": "Ruby",
+        "breed": "Border Collie",
+        "birthDate": "2021-04-17T00:00:00",
+        "sex": "Female",
+        "price": 500.0,
+        "status": true
+    },
+    {
+        "animalId": 28,
+        "name": "Toby",
+        "breed": "Australian Shepherd",
+        "birthDate": "2020-08-04T00:00:00",
+        "sex": "Male",
+        "price": 550.0,
+        "status": true
+    },
+    {
+        "animalId": 29,
+        "name": "Mia",
+        "breed": "Maltese",
+        "birthDate": "2019-10-21T00:00:00",
+        "sex": "Female",
+        "price": 400.0,
+        "status": true
+    },
+    {
+        "animalId": 30,
+        "name": "Bentley",
+        "breed": "Cavalier King Charles Spaniel",
+        "birthDate": "2018-11-10T00:00:00",
+        "sex": "Male",
+        "price": 600.0,
+        "status": true
+    },
+    {
+        "animalId": 31,
+        "name": "Rosie",
+        "breed": "Labradoodle",
+        "birthDate": "2021-01-27T00:00:00",
+        "sex": "Female",
+        "price": 550.0,
+        "status": true
+    },
+    {
+        "animalId": 32,
+        "name": "Charlie",
+        "breed": "Bernese Mountain Dog",
+        "birthDate": "2020-06-14T00:00:00",
+        "sex": "Male",
+        "price": 650.0,
+        "status": true
+    },
+    {
+        "animalId": 33,
+        "name": "Daisy",
+        "breed": "Havanese",
+        "birthDate": "2019-03-03T00:00:00",
+        "sex": "Female",
+        "price": 450.0,
+        "status": true
+    },
+    {
+        "animalId": 34,
+        "name": "Rocky",
+        "breed": "Shetland Sheepdog",
+        "birthDate": "2020-07-20T00:00:00",
+        "sex": "Male",
+        "price": 550.0,
+        "status": true
+    },
+    {
+        "animalId": 35,
+        "name": "Milo",
+        "breed": "Schnauzer",
+        "birthDate": "2019-08-09T00:00:00",
+        "sex": "Male",
+        "price": 400.0,
+        "status": true
+    },
+    {
+        "animalId": 36,
+        "name": "Sophie",
+        "breed": "Yorkshire Terrier",
+        "birthDate": "2018-12-26T00:00:00",
+        "sex": "Female",
+        "price": 450.0,
+        "status": true
+    }
+]
