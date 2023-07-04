@@ -90,7 +90,7 @@ namespace Genetics.Server.Controllers
             return CreatedAtAction("GetAnimal", new { id = animal.AnimalId }, animal);
         }
 
-        [HttpDelete("{id}")]
+        [HttpDelete("DeleteAnimal/{id}")]
         public async Task<IActionResult> DeleteAnimal(int id)
         {
             if (_context.Animal == null)
