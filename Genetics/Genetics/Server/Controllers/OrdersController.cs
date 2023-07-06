@@ -40,6 +40,18 @@ namespace Genetics.Server.Controllers
             return order;
         }
 
+        [HttpGet("GetOrder/{OrderId}")]
+        public async Task<ActionResult<IEnumerable<Order>>> GetOrder(int orderId)
+        {
+            if (_context.Order == null)
+            {
+                return NotFound();
+            }
+
+            var order = await _context.Order.Where(x => x.OrderId == orderId).ToListAsync();
+            return order;
+        }
+
         [HttpGet("GetOrderDetail/{orderId}")]
         public async Task<ActionResult<IEnumerable<OrderDetail>>> GetOrderDetail(int orderId)
         {
@@ -48,7 +60,7 @@ namespace Genetics.Server.Controllers
                 return NotFound();
             }
 
-            var orderDetail = await _context.OrderDetail.ToListAsync();
+            var orderDetail = await _context.OrderDetail.Where(x => x.OrderId == orderId).ToListAsync();
             return orderDetail;
         }
 
@@ -69,21 +81,58 @@ namespace Genetics.Server.Controllers
                     _context.Order.Add(order);
                     await _context.SaveChangesAsync();
 
-                    foreach (var item in orderModel.OrderDetail)
+                    int lastId = order.OrderId;
+                    int totalAmount = 0;
+
+                    foreach (var item in orderModel.lstOrderDetail)
                     {
-                        item.OrderId = order.OrderId;                        
-                        item.AnimalId = item.AnimalId;
+                        Animal animal = await _context.Animal.FindAsync(item.AnimalId);
 
-                        /* -- Pendiente realizar los calculos -- */
+                        if (animal != null)
+                        {
+                            decimal subtotal = item.Amount * animal.Price; // Calcular el subtotal usando el precio del Animal
 
-                        //item.Amount = item.Amount;
-                        //item.Freight = item.Freight;
-                        //item.Subtotal = item.Subtotal;
-                        
-                        _context.OrderDetail.Add(item);
-                        await _context.SaveChangesAsync();
+                            // Aplicar descuento del 5% si Amount es mayor a 5 y menor 10
+                            if (item.Amount > 5 && item.Amount < 10)
+                            {
+                                decimal discount = subtotal * 0.05m;
+                                subtotal -= discount;
+                            }
+
+                            OrderDetail orderDetail = new OrderDetail
+                            {
+                                AnimalId = item.AnimalId,
+                                OrderId = lastId,
+                                Amount = item.Amount,
+                                Discount = item.Discount,
+                                Freight = item.Freight,
+                                Subtotal = subtotal
+                            };
+
+                            _context.OrderDetail.Add(orderDetail);
+                            await _context.SaveChangesAsync();
+
+                            totalAmount += item.Amount;
+                        }
                     }
 
+                    decimal totalDiscount = 0;
+
+                    // Aplicar descuento adicional del 3% si el totalAmount es mayor a 10
+                    if (totalAmount > 10)
+                    {
+                        decimal additionalDiscount = order.TotalPurchase * 0.03m;
+                        totalDiscount += additionalDiscount;
+                    }
+
+                    // Establecer Freight según el totalAmount
+                    decimal freight = totalAmount > 20 ? 0 : 1000;
+
+                    // Actualizar los campos en la entidad Order
+                    order.TotalDiscount = totalDiscount;
+                    order.TotalPurchase = order.TotalPurchase - totalDiscount + freight;
+
+                    await _context.SaveChangesAsync();
                     await transaction.CommitAsync();
 
                     return Ok();

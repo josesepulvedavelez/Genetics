@@ -8,7 +8,7 @@ namespace Genetics.Shared.Models
 {
     public class OrderModel
     {
-        public Order? Order { get; set; } 
-        public List<OrderDetail>? OrderDetail { get; set; }
+        public Order Order { get; set; } 
+        public List<OrderDetail> lstOrderDetail { get; set; }
     }
 }
