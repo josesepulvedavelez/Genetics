@@ -34,5 +34,7 @@ namespace Genetics.Shared.Models
         public decimal Price { get; set; }
 
         public Boolean? Status { get; set; }
+
+        public ICollection<OrderDetail>? OrderDetail { get; set; }
     }
 }
