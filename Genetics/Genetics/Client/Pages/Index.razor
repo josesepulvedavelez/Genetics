@@ -9,6 +9,7 @@
 <h1>Animals</h1>
 
 <button type="button" @onclick="(()=> AddAnimal())" class="btn btn-success">New Animal</button>
+<button type="button" @onclick="(()=> AddOrder())" class="btn btn-success">New Order</button>
 
 <RadzenDataGrid AllowFiltering="true" AllowColumnResize="true" PageSize="10" AllowPaging="true" FilterMode="FilterMode.Advanced" AllowSorting="true"
             Data="@lstAnimals" TItem="Animal" ColumnWidth="150px"
@@ -74,6 +75,13 @@
     private async Task AddAnimal()
     {
         await DialogService.OpenAsync<AddAnimal>($"Add Animal",
+            new Dictionary<string, object>() { },
+            new DialogOptions() { Width = "700px", Height = "570px", Resizable = true });
+    }
+
+    private async Task AddOrder()
+    {
+        await DialogService.OpenAsync<AddOrder>($"Add Order",
             new Dictionary<string, object>() { },
             new DialogOptions() { Width = "700px", Height = "570px", Resizable = true });
     }
