@@ -20,17 +20,8 @@
 }
 else
 {
-    <EditForm Model="@_OrderModel" OnValidSubmit="@Save">
+    <EditForm Model="@_OrderModel">
         <div class="row">
-            @*<div class="col-md-6">
-                <div class="form-group">
-                    <label>Animal</label>
-                    <RadzenDropDown TValue="int" Data="@_OrderModel.lstAnimal"
-                                TextProperty="_OrderModel.Animal.Name" ValueProperty="_OrderModel.Animal.AnimalId"
-                                @bind-Value="_OrderModel.Animal.AnimalId" class="w-100"
-                                Change="(() => OnAnimalSelectionChange(_OrderModel.Animal.AnimalId))" />
-                </div>
-            </div>*@
 
             <div class="col-md-6">
                 <div class="form-group">
@@ -62,7 +53,7 @@ else
         <div class="col-md-12">
             <center>
                 <button type="button" class="btn btn-success" @onclick="(() => OnAddList())">Add</button>
-                <button type="submit" class="btn btn-success">Save</button>
+                <button type="submit" class="btn btn-success" @onclick = "(() => Save())">Save</button>
             </center>
         </div>
 
@@ -103,8 +94,15 @@ else
         if (response != null)
         {
             _lstAnimals = response;
-            _OrderModel.lstAnimal = _lstAnimals;
+            
+            _OrderModel = new OrderModel
+            {
+                lstAnimal = response.ToList(),
+                Order = new Order(),
+                lstOrderDetail = new List<OrderDetail>()
+            };
         }
+
     }
 
     private decimal OnAnimalSelectionChange(int animalId)
@@ -150,7 +148,9 @@ else
             _OrderModel.Order.Date = DateTime.Now;
             _OrderModel.Order.TotalDiscount = 0;
             _OrderModel.Order.TotalPurchase = 0;
-            
+
+            _OrderModel.lstOrderDetail = _lstOrderDetails;
+
             var json = JsonConvert.SerializeObject(_OrderModel);
             var stringContent = new StringContent(json, UnicodeEncoding.UTF8, "application/json");
             var httpResponse = await Http.PostAsync("/Api/Orders/AddOrder", stringContent);
