@@ -1,5 +1,64 @@
 ﻿@page "/AddOrder"
 
+@using Genetics.Shared.Models;
+@using Genetics.Shared;
+@using Newtonsoft
+@using Newtonsoft.Json
+@using System.Text
+@*@inject Services.ClienteService clienteService*@
+@inject HttpClient Http
+@inject DialogService DialogService
+@inject NotificationService NotificationService
+
+<RadzenNotification />
+
+@if (_lstAnimals == null)
+{
+    <div class="spinner-grow" style="width: 3rem; height: 3rem;" role="status">
+        <span class="visually-hidden">Loading...</span>
+    </div>
+}
+else
+{
+    <EditForm Model="@_OrderModel">
+        <div class="row">            
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label>Animal</label>
+                    <RadzenDropDown TValue="int" Data="@_lstAnimals" 
+                                    TextProperty="Name" ValueProperty="AnimalId" 
+                                    @bind-Value="_Animal.AnimalId" class="w-100"
+                                    Change="(() => OnAnimalSelectionChange(_Animal.AnimalId))" />
+                </div>
+            </div>
+        </div>
+
+        <br />
+
+        <div class="col-md-12">
+            <center>
+                <button type="submit" class="btn btn-success">Save</button>
+            </center>
+        </div>
+    </EditForm>
+}
+
 @code {
-	
+    private OrderModel _OrderModel = new OrderModel();
+    private Animal _Animal = new();
+    private IEnumerable<Animal> _lstAnimals = new List<Animal>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        var response = await Http.GetFromJsonAsync<IEnumerable<Animal>>("/Api/Animals/GetAnimal");
+        if (response != null)
+        {
+            _lstAnimals = response;
+        }
+    }
+
+    private void OnAnimalSelectionChange(int animalId)
+    {
+        Console.WriteLine($"Selected AnimalId: {animalId}");
+    }
 }
