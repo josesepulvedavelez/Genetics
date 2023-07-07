@@ -15,19 +15,7 @@ namespace Genetics.Server.Controllers
         { 
             _context = animalContext;
         }
-
-        [HttpGet("GetAnimal")]
-        public async Task<ActionResult<IEnumerable<Animal>>> GetAnimal()
-        {
-            if (_context.Animal == null)
-            {
-                return NotFound();
-            }
-
-            var animals = await _context.Animal.OrderBy(a => a.Breed).ToListAsync();
-            return animals;
-        }
-
+                
         [HttpGet("GetOrder")]
         public async Task<ActionResult<IEnumerable<Order>>> GetOrder()
         {
