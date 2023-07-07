@@ -12,7 +12,7 @@
 
 <RadzenNotification />
 
-@if (_lstAnimals == null)
+@if (_OrderModel == null)
 {
     <div class="spinner-grow" style="width: 3rem; height: 3rem;" role="status">
         <span class="visually-hidden">Loading...</span>
@@ -20,15 +20,39 @@
 }
 else
 {
-    <EditForm Model="@_OrderModel">
-        <div class="row">            
+    <EditForm Model="@_OrderModel" OnValidSubmit="@Save">
+        <div class="row">
+            @*<div class="col-md-6">
+                <div class="form-group">
+                    <label>Animal</label>
+                    <RadzenDropDown TValue="int" Data="@_OrderModel.lstAnimal"
+                                TextProperty="_OrderModel.Animal.Name" ValueProperty="_OrderModel.Animal.AnimalId"
+                                @bind-Value="_OrderModel.Animal.AnimalId" class="w-100"
+                                Change="(() => OnAnimalSelectionChange(_OrderModel.Animal.AnimalId))" />
+                </div>
+            </div>*@
+
             <div class="col-md-6">
                 <div class="form-group">
                     <label>Animal</label>
-                    <RadzenDropDown TValue="int" Data="@_lstAnimals" 
-                                    TextProperty="Name" ValueProperty="AnimalId" 
-                                    @bind-Value="_Animal.AnimalId" class="w-100"
-                                    Change="(() => OnAnimalSelectionChange(_Animal.AnimalId))" />
+                    <RadzenDropDown TValue="int" Data="@_OrderModel.lstAnimal" 
+                                    TextProperty="Name" ValueProperty="AnimalId"
+                                    @bind-Value="@_SelectedAnimalId" class="w-100"
+                                Change="(() => OnAnimalSelectionChange(_SelectedAnimalId))" />
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label>Price</label>
+                    <RadzenTextBox Value="@_Price.ToString()" Change="@((string value) => _Price = decimal.TryParse(value, out var parsedValue) ? parsedValue : 0)" class="w-100" />
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label>Amount</label>
+                    <RadzenNumeric Value="@_Amount" class="w-100" />
                 </div>
             </div>
         </div>
@@ -37,28 +61,130 @@ else
 
         <div class="col-md-12">
             <center>
+                <button type="button" class="btn btn-success" @onclick="(() => OnAddList())">Add</button>
                 <button type="submit" class="btn btn-success">Save</button>
             </center>
         </div>
+
+        <br />
+
+        <table border="1">
+            <thead>
+                <th>AnimalID</th>
+                <th>Amount</th>
+            </thead>
+            <tbody>
+                @foreach (var item in _lstOrderDetails)
+                {
+                    <tr>
+                        <td>@item.AnimalId</td>
+                        <td>@item.Amount</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
     </EditForm>
 }
 
 @code {
     private OrderModel _OrderModel = new OrderModel();
-    private Animal _Animal = new();
     private IEnumerable<Animal> _lstAnimals = new List<Animal>();
+
+    private int _SelectedAnimalId;
+    decimal _Price;
+    private int _Amount;
+
+    private List<OrderDetail> _lstOrderDetails = new();
 
     protected override async Task OnInitializedAsync()
     {
         var response = await Http.GetFromJsonAsync<IEnumerable<Animal>>("/Api/Animals/GetAnimal");
+
         if (response != null)
         {
             _lstAnimals = response;
+            _OrderModel.lstAnimal = _lstAnimals;
         }
     }
 
-    private void OnAnimalSelectionChange(int animalId)
+    private decimal OnAnimalSelectionChange(int animalId)
     {
-        Console.WriteLine($"Selected AnimalId: {animalId}");
+        var selectedAnimal = _lstAnimals.FirstOrDefault(a => a.AnimalId == animalId);
+        _Price = selectedAnimal.Price;
+
+        return _Price;
+    }
+
+    private void OnAddList()
+    {
+        var existingItem = _lstOrderDetails.FirstOrDefault(item => item.AnimalId == _SelectedAnimalId);
+
+        if (existingItem == null)
+        {
+            _lstOrderDetails.Add(
+                new OrderDetail
+                    {
+                        Amount = _Amount,
+                        Discount = 0,
+                        Freight = 0,
+                        Subtotal = 0,
+                        AnimalId = _SelectedAnimalId
+                    });
+        }
+        else
+        {
+            ShowNotification(new NotificationMessage
+                {
+                    Severity = NotificationSeverity.Warning,
+                    Summary = "Add Order",
+                    Detail = "The animal is already in the list.",
+                    Duration = 5000
+                });
+        }
+    }
+
+    private async Task Save()
+    {
+        try
+        {
+            _OrderModel.Order.Date = DateTime.Now;
+            _OrderModel.Order.TotalDiscount = 0;
+            _OrderModel.Order.TotalPurchase = 0;
+            
+            var json = JsonConvert.SerializeObject(_OrderModel);
+            var stringContent = new StringContent(json, UnicodeEncoding.UTF8, "application/json");
+            var httpResponse = await Http.PostAsync("/Api/Orders/AddOrder", stringContent);
+
+            if (httpResponse.IsSuccessStatusCode)
+            {
+                ShowNotification(new NotificationMessage
+                    {
+                        Severity = NotificationSeverity.Success,
+                        Summary = "Save Order",
+                        Detail = "Order saved successfully.",
+                        Duration = 5000
+                    });
+                DialogService.Close(true);
+            }
+            else
+            {
+                ShowNotification(new NotificationMessage
+                    {
+                        Severity = NotificationSeverity.Warning,
+                        Summary = "Save Order",
+                        Detail = "The Order could not be saved.",
+                        Duration = 5000
+                    });
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"{ex.Message}");
+        }
+    }
+
+    void ShowNotification(NotificationMessage message)
+    {
+        NotificationService.Notify(message);
     }
 }

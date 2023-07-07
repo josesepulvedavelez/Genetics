@@ -12,6 +12,8 @@
 
 <RadzenNotification />
 
+<h2 class="text-success">Are you sure you want to delete the animal?</h2>
+
 @if (_Animal == null)
 {
     <div class="spinner-grow" style="width: 3rem; height: 3rem;" role="status">
@@ -26,7 +28,7 @@ else
         <div class="col-md-6">
             <div class="form-group">
                 <label>Name</label>
-                <RadzenTextBox @bind-Value="@_Animal.Name" class="w-100" />
+                <RadzenTextBox @bind-Value="@_Animal.Name" class="w-100" Disabled />
                 <ValidationMessage For="@(() => _Animal.Name)" />
             </div>
         </div>
@@ -34,7 +36,7 @@ else
         <div class="col-md-6">
             <div class="form-group">
                 <label>Breed</label>
-                <RadzenTextBox @bind-Value="@_Animal.Breed" class="w-100" />
+                    <RadzenTextBox @bind-Value="@_Animal.Breed" class="w-100" Disabled />
                 <ValidationMessage For="@(() => _Animal.Breed)" />
             </div>
         </div>
@@ -42,7 +44,7 @@ else
         <div class="col-md-6">
             <div class="form-group">
                 <label>BirthDate</label>
-                <RadzenDatePicker @bind-Value="@_Animal.BirthDate" class="w-100" />
+                    <RadzenDatePicker @bind-Value="@_Animal.BirthDate" class="w-100" Disabled />
                 <ValidationMessage For="@(() => _Animal.BirthDate)" />
             </div>
         </div>
@@ -50,7 +52,7 @@ else
         <div class="col-md-6">
             <div class="form-group">
                 <label>Sex</label>
-                <RadzenDropDown TValue="string" Data="@_lstSex" TextProperty="Sex" ValueProperty="Sex" @bind-Value="_Animal.Sex" class="w-100" />
+                    <RadzenDropDown TValue="string" Data="@_lstSex" TextProperty="Sex" ValueProperty="Sex" @bind-Value="_Animal.Sex" class="w-100" Disabled />
                 <ValidationMessage For="@(() => _Animal.Sex)" />
             </div>
         </div>
@@ -58,7 +60,7 @@ else
         <div class="col-md-6">
             <div class="form-group">
                 <label>Price</label>
-                <RadzenTextBox Value="@_Animal.Price.ToString()" Change="@((string value) => _Animal.Price = decimal.Parse(value))" class="w-100" />
+                    <RadzenTextBox Value="@_Animal.Price.ToString()" Change="@((string value) => _Animal.Price = decimal.Parse(value))" class="w-100" Disabled />
                 <ValidationMessage For="@(() => _Animal.Price)" />
             </div>
         </div>
@@ -66,7 +68,7 @@ else
         <div class="col-md-6">
             <div class="form-group">
                 <label>Status</label>
-                <RadzenCheckBox @bind-Value="@_Animal.Status" Text="Active" />
+                    <RadzenCheckBox @bind-Value="@_Animal.Status" Text="Active" Disabled />
             </div>
         </div>
     </div>
@@ -120,7 +122,7 @@ else
                     Severity = NotificationSeverity.Success,
                     Summary = "Delete Animal",
                     Detail = "Animal deteled successfully.",
-                    Duration = 6000
+                    Duration = 5000
                 });
             DialogService.Close(true);
         }
@@ -131,7 +133,7 @@ else
                     Severity = NotificationSeverity.Warning,
                     Summary = "Delete Animal",
                     Detail = "The animal could not be delete.",
-                    Duration = 6000
+                    Duration = 5000
                 });
         }
     }
