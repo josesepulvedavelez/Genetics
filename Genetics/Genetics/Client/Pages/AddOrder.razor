@@ -109,7 +109,6 @@ else
     {
         var selectedAnimal = _lstAnimals.FirstOrDefault(a => a.AnimalId == animalId);
         _Price = selectedAnimal.Price;
-
         return _Price;
     }
 
@@ -124,7 +123,7 @@ else
                     {
                         Amount = _Amount,
                         Discount = 0,
-                        Freight = 0,
+                        
                         Subtotal = 0,
                         AnimalId = _SelectedAnimalId
                     });

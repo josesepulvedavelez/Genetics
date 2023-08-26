@@ -16,8 +16,9 @@ namespace Genetics.Shared.Models
         public int OrderId { get; set; }
         public DateTime Date { get; set; }
         public decimal TotalDiscount { get; set; }
+        public decimal TotalFreight { get; set; }
         public decimal TotalPurchase { get; set; }
-
+        
         public ICollection<OrderDetail>? OrderDetail { get; set; }
     }
 }

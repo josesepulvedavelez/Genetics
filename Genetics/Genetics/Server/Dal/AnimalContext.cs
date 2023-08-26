@@ -14,11 +14,4 @@ namespace Genetics.Server.Dal
         
         }
     }
-
-    /*
-        public DbSet<Departamento> Departamento{ get; set; }
-        public ApplicationDBContext(DbContextOptions<ApplicationDBContext> options) : base(options)
-        {
-        } 
-    */
 }

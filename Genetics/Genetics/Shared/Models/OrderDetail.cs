@@ -14,18 +14,21 @@ namespace Genetics.Shared.Models
         [Key]
         [Required]
         public int OrderDetailId { get; set; }
-
-        [Required]
-        public int Amount { get; set; }
-
-        public decimal Discount { get; set; }
-        public decimal Freight { get; set; }
-        public decimal Subtotal { get; set; }
-
+                
         public int? AnimalId { get; set; }
         public Animal? Animal { get; set; }
 
-        public int? OrderId { get; set;}
+        public int? OrderId { get; set; }
         public Order? Order { get; set; }
+
+        public string? Name { get; set; }
+
+        public decimal? Price { get; set; }
+                
+        public int Amount { get; set; }
+
+        public decimal? Subtotal { get; set; }
+        
+        public decimal? Discount { get; set; }
     }
 }

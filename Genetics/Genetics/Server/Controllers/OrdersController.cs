@@ -53,7 +53,7 @@ namespace Genetics.Server.Controllers
         }
 
         [HttpPost("AddOrder")]
-        public async Task<ActionResult> AddOrder([FromBody] OrderModel orderModel)
+        public async Task<ActionResult> AddOrder([FromBody] List<OrderDetail> lstOrderDetail)
         {
             using (var transaction = _context.Database.BeginTransaction())
             {
@@ -63,7 +63,8 @@ namespace Genetics.Server.Controllers
                     {
                         Date = DateTime.Now,
                         TotalDiscount = 0,
-                        TotalPurchase = 0
+                        TotalFreight = 0,
+                        TotalPurchase = (decimal)lstOrderDetail.Sum(detail => detail.Subtotal) // Sumar los subtotales de los detalles del pedido
                     };
 
                     _context.Order.Add(order);
@@ -72,18 +73,20 @@ namespace Genetics.Server.Controllers
                     int lastId = order.OrderId;
                     int totalAmount = 0;
 
-                    foreach (var item in orderModel.lstOrderDetail)
+                    decimal discount = 0;
+
+                    foreach (var item in lstOrderDetail)
                     {
-                        Animal animal = await _context.Animal.FindAsync(item.AnimalId);
+                        Animal animalId = await _context.Animal.FindAsync(item.AnimalId);
 
-                        if (animal != null)
+                        if (animalId != null)
                         {
-                            decimal subtotal = item.Amount * animal.Price; // Calcular el subtotal usando el precio del Animal
+                            decimal subtotal = (decimal)(item.Amount * item.Price); // Calcular el subtotal usando el precio del Animal
 
-                            // Aplicar descuento del 5% si Amount es mayor a 5 y menor 10
-                            if (item.Amount > 5 && item.Amount < 10)
+                            // Aplicar descuento del 5% si Amount es mayor a 5
+                            if (item.Amount > 5)
                             {
-                                decimal discount = subtotal * 0.05m;
+                                discount = subtotal * 0.05m;
                                 subtotal -= discount;
                             }
 
@@ -91,10 +94,11 @@ namespace Genetics.Server.Controllers
                             {
                                 AnimalId = item.AnimalId,
                                 OrderId = lastId,
+                                Name = item.Name,
+                                Price = item.Price,
                                 Amount = item.Amount,
-                                Discount = item.Discount,
-                                Freight = item.Freight,
-                                Subtotal = subtotal
+                                Subtotal = subtotal,
+                                Discount = discount
                             };
 
                             _context.OrderDetail.Add(orderDetail);
@@ -118,7 +122,8 @@ namespace Genetics.Server.Controllers
 
                     // Actualizar los campos en la entidad Order
                     order.TotalDiscount = totalDiscount;
-                    order.TotalPurchase = order.TotalPurchase - totalDiscount + freight;
+                    order.TotalFreight = freight;
+                    order.TotalPurchase = (decimal)(lstOrderDetail.Sum(detail => detail.Subtotal) - totalDiscount + freight); ;
 
                     await _context.SaveChangesAsync();
                     await transaction.CommitAsync();
@@ -133,6 +138,7 @@ namespace Genetics.Server.Controllers
                 }
             }
         }
+
 
     }
 }
